@@ -22,7 +22,7 @@ export default function App() {
             <CameraControls makeDefault />
             <Refraction />
             <Utilities />
-            <Environment preset="sunset" />
+            {/* <Environment preset="sunset" /> */}
         </Canvas>
     </>
 }

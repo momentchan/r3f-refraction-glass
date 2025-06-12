@@ -1,6 +1,6 @@
 import { useRef, useEffect, useMemo } from 'react'
 import { useThree, useFrame } from '@react-three/fiber'
-import { useFBO } from '@react-three/drei'
+import { useFBO, useTexture } from '@react-three/drei'
 import fragmentShader from '../shader/test/fragment.glsl'
 import { useControls } from 'leva'
 import * as THREE from 'three'
@@ -110,7 +110,7 @@ export default function Refraction() {
 
   useFrame(() => {
     groupRef.current.visible = false
-    gl.toneMapping = THREE.LinearToneMapping
+    // gl.toneMapping = THREE.LinearToneMapping
     gl.setRenderTarget(sceneFBO)
     gl.render(scene, camera)
 
@@ -127,6 +127,10 @@ export default function Refraction() {
   }, 1)
 
 
+  const normalMap = useTexture('water_normal.jpg')
+  normalMap.wrapS = THREE.RepeatWrapping
+  normalMap.wrapT = THREE.RepeatWrapping
+  normalMap.repeat.set(5, 5)
 
 
   const thickness = 0.05
@@ -138,16 +142,43 @@ export default function Refraction() {
         <meshPhysicalMaterial color="#ffffff" metalness={0.5} roughness={0.2} clearcoat={1} clearcoatRoughness={0.1} />
       </mesh>
 
+      <directionalLight position={[0.5, 0, 0.866]} intensity={0.5} />
+      <ambientLight intensity={0.5} />
+
       <group ref={groupRef}>
-        {Array.from({ length: 100 }).map((_, i) => (
+        {/* {Array.from({ length: 100 }).map((_, i) => (
           <mesh
             key={i}
             position={[(i - 50) * thickness * 2, 0, 0]}
-            material={shaderMaterial}
+          // material={shaderMaterial}
           >
             <cylinderGeometry args={[thickness, thickness, 1, 32]} />
+            <meshPhysicalMaterial
+              color="#ffffff"
+              metalness={0}
+              roughness={0.1}
+              transmission={1}
+              thickness={0.4}
+              dispersion={0}
+              normalMap={normalMap}
+              // transparent={true} 
+            />
+
           </mesh>
-        ))}
+        ))} */}
+
+        <mesh>
+          <planeGeometry args={[5, 5, 100, 100]} />
+          <meshPhysicalMaterial
+            color="#ffffff"
+            metalness={0}
+            roughness={0.3}
+            transmission={0.7}
+            thickness={0.4}
+            dispersion={5}
+            normalMap={normalMap}
+          />
+        </mesh>
       </group>
     </>
   )
