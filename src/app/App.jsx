@@ -16,8 +16,7 @@ export default function App() {
                 far: 200,
                 position: [0, 0, 6]
             }}
-            gl={{ preserveDrawingBuffer: true, 
-            }}
+            gl={{ preserveDrawingBuffer: true }}
         >
             <color attach="background" args={['#ffffff']} />
             <CameraControls makeDefault />
